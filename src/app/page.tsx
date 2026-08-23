@@ -89,7 +89,7 @@ export default function Home() {
 
         <nav className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5 md:px-8">
           <a className="font-display text-xs font-bold uppercase tracking-[0.28em] text-cyan-200" href="#">
-            Abdul.core
+            Abdul Rehman
           </a>
           <div className="hidden items-center gap-7 font-display text-[10px] uppercase tracking-[0.26em] text-[#8888cc] md:flex">
             <a className="transition hover:text-cyan-200" href="#about">About</a>
