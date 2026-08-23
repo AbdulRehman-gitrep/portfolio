@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg-void: #0a0a0f;
+  --bg-surface: #1a1a2e;
+  --bg-surface-2: #2a2a4e;
+  --accent-cyan: #00f5ff;
+  --accent-violet: #7b2fff;
+  --text-primary: #e0e0ff;
+  --text-muted: #8888cc;
+  --text-faint: #5555aa;
+  --panel: rgba(26, 26, 46, 0.72);
+  --line: rgba(0, 245, 255, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(123, 47, 255, 0.22), transparent 30rem),
+    radial-gradient(circle at 18% 72%, rgba(0, 245, 255, 0.14), transparent 30rem),
+    radial-gradient(circle at 72% 24%, rgba(125, 249, 255, 0.12), transparent 24rem),
+    var(--bg-void);
+  color: var(--text-primary);
+  font-family: var(--font-body), sans-serif;
+}
+
+::selection {
+  background: rgba(0, 245, 255, 0.32);
+}
+
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 80px rgba(0, 245, 255, 0.08);
+}
+
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 245, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 245, 255, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, black, transparent 76%);
+}
+
+.sharp-button {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
