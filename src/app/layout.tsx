@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   title: "Abdul Rehman | Software Engineer",
   description:
     "Portfolio for Abdul Rehman, a software engineer focused on full-stack development, backend systems, and modern web experiences.",
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
@@ -32,4 +36,3 @@ export default function RootLayout({
     </html>
   );
 }
-
