@@ -397,17 +397,17 @@ export default function Home() {
         </div>
       </section>
 
-      <footer id="contact" className="relative bg-black px-6 py-20 sm:px-12 lg:px-20">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-12">
+      <footer id="contact" className="relative overflow-hidden bg-black px-4 py-20 sm:px-12 lg:px-20">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5"><SectionLabel>05 / Contact</SectionLabel><FilmTitle top="Let&apos;s build" bottom="something" /><p className="mt-7 max-w-md text-sm font-light leading-7 text-[#a8988b]">Open to software engineering internships, junior developer roles, backend/full-stack projects, and useful web product collaborations.</p></div>
-          <div className="relative border border-[#8c6d4f]/40 bg-[#0a0806] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.9)] lg:col-span-7">
+          <div className="relative min-w-0 border border-[#8c6d4f]/40 bg-[#0a0806] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.9)] sm:p-8 lg:col-span-7">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
-            <a href="mailto:ar3450630@gmail.com" className="block break-words font-mono text-2xl lowercase text-[#f7e7c4] transition hover:text-[#d4af37] sm:text-3xl">ar3450630@gmail.com</a>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="tel:+923121191058"><Phone className="mb-3" size={18} />0312-1191058</a>
-              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="https://github.com/AbdulRehman-gitrep" target="_blank" rel="noreferrer"><Github className="mb-3" size={18} />GitHub</a>
-              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="https://www.linkedin.com/in/abdul-rehman-21a7752a7" target="_blank" rel="noreferrer"><Linkedin className="mb-3" size={18} />LinkedIn</a>
-              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="/resume.pdf" target="_blank" rel="noreferrer"><Download className="mb-3" size={18} />Resume</a>
+            <a href="mailto:ar3450630@gmail.com" className="block max-w-full break-all font-mono text-[clamp(1rem,5.3vw,1.85rem)] lowercase leading-tight text-[#f7e7c4] transition hover:text-[#d4af37]">ar3450630@gmail.com</a>
+            <div className="mt-8 grid min-w-0 gap-4 sm:grid-cols-2">
+              <a className="min-w-0 border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[#ead8c7] hover:border-[#d4af37] sm:text-[11px] sm:tracking-[0.2em]" href="tel:+923121191058"><Phone className="mb-3" size={18} />0312-1191058</a>
+              <a className="min-w-0 border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[#ead8c7] hover:border-[#d4af37] sm:text-[11px] sm:tracking-[0.2em]" href="https://github.com/AbdulRehman-gitrep" target="_blank" rel="noreferrer"><Github className="mb-3" size={18} />GitHub</a>
+              <a className="min-w-0 border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[#ead8c7] hover:border-[#d4af37] sm:text-[11px] sm:tracking-[0.2em]" href="https://www.linkedin.com/in/abdul-rehman-21a7752a7" target="_blank" rel="noreferrer"><Linkedin className="mb-3" size={18} />LinkedIn</a>
+              <a className="min-w-0 border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[#ead8c7] hover:border-[#d4af37] sm:text-[11px] sm:tracking-[0.2em]" href="/resume.pdf" target="_blank" rel="noreferrer"><Download className="mb-3" size={18} />Resume</a>
             </div>
           </div>
         </div>
@@ -416,6 +416,7 @@ export default function Home() {
     </main>
   );
 }
+
 
 
 
