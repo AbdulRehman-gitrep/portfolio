@@ -209,11 +209,15 @@ function TimelinePanel({
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 78%", "end 52%"],
+    target: timelineRef,
+    offset: ["start 82%", "end 35%"],
   });
-  const lineScale = useSpring(scrollYProgress, { stiffness: 120, damping: 28 });
+  const lineHeight = useSpring(useTransform(scrollYProgress, [0, 1], ["0%", "100%"]), {
+    stiffness: 95,
+    damping: 24,
+  });
 
   return (
     <motion.div
@@ -226,18 +230,18 @@ function TimelinePanel({
     >
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
       <h3 className="font-display text-4xl uppercase text-white sm:text-5xl">{title}</h3>
-      <div className="relative mt-8 space-y-8 pl-8">
+      <div ref={timelineRef} className="relative mt-8 space-y-8 pl-8">
         <div className="absolute bottom-3 left-[5px] top-2 w-px bg-[#8c6d4f]/30" />
         <motion.div
-          style={{ scaleY: lineScale }}
-          className="absolute bottom-3 left-[5px] top-2 w-px origin-top bg-gradient-to-b from-[#d4af37] via-[#c99e5d] to-[#8c6d4f]/20 shadow-[0_0_10px_rgba(212,175,55,0.75)]"
+          style={{ height: lineHeight }}
+          className="absolute left-[5px] top-2 w-px bg-gradient-to-b from-[#d4af37] via-[#c99e5d] to-[#8c6d4f]/20 shadow-[0_0_10px_rgba(212,175,55,0.75)]"
         />
         {items.map((item, index) => (
           <motion.article
             key={item.title}
             initial={{ opacity: 0, x: -14 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
+            viewport={{ once: false, margin: "-15% 0px -20% 0px" }}
             transition={{ delay: index * 0.08, duration: 0.65 }}
             className="group relative"
           >
@@ -412,6 +416,7 @@ export default function Home() {
     </main>
   );
 }
+
 
 
 
