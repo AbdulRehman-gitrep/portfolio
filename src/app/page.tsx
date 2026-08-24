@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { Download, Github, Linkedin, Mail, Phone } from "lucide-react";
 import { useRef, useState } from "react";
 
@@ -190,8 +190,8 @@ function PortraitCard() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/profile.png" alt="Abdul Rehman" className="max-h-[560px] w-full object-contain brightness-95 contrast-105 transition duration-700 group-hover:brightness-110" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-          <span className="absolute bottom-4 right-4 font-display text-3xl uppercase text-[#f2d8a7] drop-shadow-[0_0_12px_rgba(242,216,167,0.5)]">
-            Abdul
+          <span className="absolute bottom-4 right-4 font-display text-2xl uppercase text-[#f2d8a7] drop-shadow-[0_0_12px_rgba(242,216,167,0.5)] sm:text-3xl">
+            Abdul Rehman
           </span>
         </div>
       </motion.div>
@@ -199,6 +199,63 @@ function PortraitCard() {
   );
 }
 
+function TimelinePanel({
+  title,
+  items,
+  delay = 0,
+}: {
+  title: string;
+  items: Array<{ year: string; title: string; org: string; text: string }>;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 78%", "end 52%"],
+  });
+  const lineScale = useSpring(scrollYProgress, { stiffness: 120, damping: 28 });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.75 }}
+      className="relative border border-[#8c6d4f]/40 bg-[#0e0c0a] p-5 shadow-[0_20px_55px_rgba(0,0,0,0.9)] sm:p-7"
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
+      <h3 className="font-display text-4xl uppercase text-white sm:text-5xl">{title}</h3>
+      <div className="relative mt-8 space-y-8 pl-8">
+        <div className="absolute bottom-3 left-[5px] top-2 w-px bg-[#8c6d4f]/30" />
+        <motion.div
+          style={{ scaleY: lineScale }}
+          className="absolute bottom-3 left-[5px] top-2 w-px origin-top bg-gradient-to-b from-[#d4af37] via-[#c99e5d] to-[#8c6d4f]/20 shadow-[0_0_10px_rgba(212,175,55,0.75)]"
+        />
+        {items.map((item, index) => (
+          <motion.article
+            key={item.title}
+            initial={{ opacity: 0, x: -14 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: index * 0.08, duration: 0.65 }}
+            className="group relative"
+          >
+            <span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border border-[#d4af37] bg-[#0e0c0a] shadow-[0_0_14px_rgba(212,175,55,0.55)] transition group-hover:scale-125 group-hover:bg-[#d4af37]" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">{item.year}</span>
+            <h4 className="mt-2 font-display text-2xl uppercase leading-none text-white group-hover:text-[#f7e7c4] sm:text-3xl">
+              {item.title}
+            </h4>
+            <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#8c6d4f]">
+              {item.org}
+            </span>
+            <p className="mt-3 text-sm font-light leading-7 text-[#a8988b]">{item.text}</p>
+          </motion.article>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
 export default function Home() {
 
   return (
@@ -289,7 +346,7 @@ export default function Home() {
           </div>
           <div className="space-y-8">
             {projects.map((project, index) => (
-              <motion.a key={project.title} href={project.href || "#"} target={project.href ? "_blank" : undefined} rel={project.href ? "noreferrer" : undefined} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ delay: index * 0.08, duration: 0.75 }} className="group sticky top-10 block rounded-2xl border border-[#8c6d4f]/50 bg-[#0e0c0a] p-8 shadow-[0_25px_70px_rgba(0,0,0,0.98)] transition hover:border-[#d4af37] sm:p-10" style={{ zIndex: index + 1 }}>
+              <motion.a key={project.title} href={project.href || "#"} target={project.href ? "_blank" : undefined} rel={project.href ? "noreferrer" : undefined} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ delay: index * 0.08, duration: 0.75 }} className="group relative block rounded-2xl border border-[#8c6d4f]/50 bg-[#0e0c0a] p-5 shadow-[0_25px_70px_rgba(0,0,0,0.98)] transition hover:border-[#d4af37] sm:sticky sm:top-10 sm:p-10" style={{ zIndex: index + 1 }}>
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/80 to-transparent" />
                 <span className="absolute -bottom-6 -right-2 font-display text-9xl text-[#ead8c7]/5">{project.number}</span>
                 <div className="relative z-10 grid gap-8 lg:grid-cols-12">
@@ -301,7 +358,7 @@ export default function Home() {
                   </div>
                   <div className="space-y-3 lg:col-span-5 lg:border-l lg:border-[#8c6d4f]/25 lg:pl-7">
                     <span className="block font-mono text-[10px] uppercase tracking-[0.25em] text-[#8c6d4f]">{"// Architecture Metrics"}</span>
-                    {project.metrics.map(([label, value]) => <div key={label} className="flex items-center justify-between border border-[#8c6d4f]/25 bg-[#050403] p-3.5"><span className="font-mono text-[10px] text-[#a8988b]">{label}</span><span className="font-mono text-[11px] font-medium text-[#f7e7c4]">{value}</span></div>)}
+                    {project.metrics.map(([label, value]) => <div key={label} className="grid gap-2 border border-[#8c6d4f]/25 bg-[#050403] p-3.5 sm:flex sm:items-center sm:justify-between"><span className="font-mono text-[10px] text-[#a8988b]">{label}</span><span className="break-words text-left font-mono text-[11px] font-medium leading-5 text-[#f7e7c4] sm:text-right">{value}</span></div>)}
                   </div>
                 </div>
               </motion.a>
@@ -330,37 +387,12 @@ export default function Home() {
           <SectionLabel>04 / Experience and Education</SectionLabel>
           <FilmTitle top="Experience and" bottom="Education" />
           <div className="mt-16 grid gap-8 lg:grid-cols-2">
-            <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75 }} className="relative border border-[#8c6d4f]/40 bg-[#0e0c0a] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.9)]">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
-              <h3 className="font-display text-5xl uppercase text-white">Experience</h3>
-              <div className="relative mt-8 space-y-8 pl-8"><div className="absolute bottom-3 left-[5px] top-2 w-px bg-gradient-to-b from-[#d4af37] via-[#8c6d4f]/45 to-transparent" />
-                {experienceItems.map((item, index) => (
-                  <motion.article key={item.title} initial={{ opacity: 0, x: -14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.65 }} className="group relative"><span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border border-[#d4af37] bg-[#0e0c0a] shadow-[0_0_14px_rgba(212,175,55,0.55)] transition group-hover:bg-[#d4af37]" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">{item.year}</span>
-                    <h4 className="mt-2 font-display text-3xl uppercase leading-none text-white group-hover:text-[#f7e7c4]">{item.title}</h4>
-                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#8c6d4f]">{item.org}</span>
-                    <p className="mt-3 text-sm font-light leading-7 text-[#a8988b]">{item.text}</p>
-                  </motion.article>
-                ))}
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.12, duration: 0.75 }} className="relative border border-[#8c6d4f]/40 bg-[#0e0c0a] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.9)]">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
-              <h3 className="font-display text-5xl uppercase text-white">Education</h3>
-              <div className="relative mt-8 space-y-8 pl-8"><div className="absolute bottom-3 left-[5px] top-2 w-px bg-gradient-to-b from-[#d4af37] via-[#8c6d4f]/45 to-transparent" />
-                {educationItems.map((item, index) => (
-                  <motion.article key={item.title} initial={{ opacity: 0, x: -14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.65 }} className="group relative"><span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border border-[#d4af37] bg-[#0e0c0a] shadow-[0_0_14px_rgba(212,175,55,0.55)] transition group-hover:bg-[#d4af37]" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">{item.year}</span>
-                    <h4 className="mt-2 font-display text-3xl uppercase leading-none text-white group-hover:text-[#f7e7c4]">{item.title}</h4>
-                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#8c6d4f]">{item.org}</span>
-                    <p className="mt-3 text-sm font-light leading-7 text-[#a8988b]">{item.text}</p>
-                  </motion.article>
-                ))}
-              </div>
-            </motion.div>
+            <TimelinePanel title="Experience" items={experienceItems} />
+            <TimelinePanel title="Education" items={educationItems} delay={0.12} />
           </div>
         </div>
       </section>
+
       <footer id="contact" className="relative bg-black px-6 py-20 sm:px-12 lg:px-20">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5"><SectionLabel>05 / Contact</SectionLabel><FilmTitle top="Let&apos;s build" bottom="something" /><p className="mt-7 max-w-md text-sm font-light leading-7 text-[#a8988b]">Open to software engineering internships, junior developer roles, backend/full-stack projects, and useful web product collaborations.</p></div>
@@ -380,6 +412,17 @@ export default function Home() {
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
