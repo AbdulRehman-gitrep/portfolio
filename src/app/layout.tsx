@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";
 
@@ -16,7 +16,7 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: "Abdul Rehman | Software Engineer",
   description:
-    "3D animated portfolio for Abdul Rehman, a software engineer focused on full-stack development, backend systems, and modern web experiences.",
+    "Portfolio for Abdul Rehman, a software engineer focused on full-stack development, backend systems, and modern web experiences.",
 };
 
 export default function RootLayout({
@@ -32,3 +32,4 @@ export default function RootLayout({
     </html>
   );
 }
+

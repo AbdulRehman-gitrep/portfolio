@@ -1,337 +1,397 @@
-"use client";
+﻿"use client";
 
-import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
-import {
-  ArrowDown,
-  Download,
-  Github,
-  Linkedin,
-  Mail,
-  Phone,
-} from "lucide-react";
-import { useState } from "react";
-
-const HeroScene = dynamic(() => import("@/components/HeroScene"), {
-  ssr: false,
-  loading: () => <div className="h-full w-full bg-[#0a0a0f]" />,
-});
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Download, Github, Linkedin, Mail, Phone } from "lucide-react";
+import { useRef, useState } from "react";
 
 const projects = [
   {
-    tag: "FULLSTACK",
-    name: "InTrack - Internship Tracking System",
+    number: "01",
+    title: "InTrack",
+    category: "FULL-STACK INTERNTOOLS SYSTEM",
     description:
-      "Full-stack internship management platform with role-based access for admins, interns, line managers, and buddies.",
-    tech: ["Next.js", "NestJS", "PostgreSQL", "TypeORM"],
+      "Internship management platform with role-based access for admins, interns, line managers, and buddies, covering tasks, reports, feedback, dashboards, JWT authentication, and activity tracking.",
+    tech: ["Next.js", "NestJS", "PostgreSQL", "TypeORM", "Tailwind"],
+    metrics: [
+      ["ACCESS", "Admin / Intern / Manager / Buddy"],
+      ["SECURITY", "JWT + RBAC"],
+      ["WORKFLOW", "Reports + Feedback"],
+    ],
   },
   {
-    tag: "LOGISTICS",
-    name: "Lightweight Transportation Management System",
+    number: "02",
+    title: "Lightweight TMS",
+    category: "LOGISTICS / OPERATIONS PLATFORM",
     description:
-      "TMS proof of concept covering shipment intake, carrier quoting, consolidation, tendering, tracking, and proof-of-delivery documents.",
-    tech: ["Next.js", "NestJS", "Docker", "Cloudinary"],
+      "Transportation management proof of concept covering shipment intake, carrier quoting, load consolidation, tendering, delivery tracking, exceptions, and proof-of-delivery documents.",
+    tech: ["Next.js", "NestJS", "PostgreSQL", "Docker", "TypeORM"],
+    metrics: [
+      ["PORTALS", "Admin / Dispatcher / Carrier"],
+      ["FLOW", "Quote to Delivery"],
+      ["OPS", "Tracking + Exceptions"],
+    ],
   },
   {
-    tag: "MERN",
-    name: "CSIT Connect",
+    number: "03",
+    title: "CSIT Connect",
+    category: "MERN COMMUNITY PLATFORM",
     description:
-      "Alumni-student bridge platform with threaded discussions, voting, secure authentication, and role-based job posting.",
+      "Alumni-student bridge platform with responsive UI, Reddit-style threaded discussions, voting, secure authentication, and role-based job posting for faculty and alumni.",
     tech: ["MongoDB", "Express.js", "React.js", "Node.js"],
     href: "https://csit-connect.vercel.app",
+    metrics: [
+      ["STACK", "MERN"],
+      ["LIVE", "Vercel Deployment"],
+    ],
   },
   {
-    tag: "BACKEND",
-    name: "LeetRank",
+    number: "04",
+    title: "LeetRank",
+    category: "BACKEND / GRAPHQL LEADERBOARD",
     description:
-      "NED CS LeetCode leaderboard using the official GraphQL API, scheduled stat updates, and an admin dashboard.",
+      "NED Computer Science LeetCode ranking system with official GraphQL API integration, scheduled performance updates, and an admin dashboard for leaderboard management.",
     tech: ["Node.js", "Express.js", "MongoDB", "GraphQL"],
     href: "https://leetrank.vercel.app",
+    metrics: [
+      ["API", "LeetCode GraphQL"],
+      ["SCOPE", "NED CS Leaderboard"],
+    ],
   },
 ];
 
-const skills = [
-  { label: "Next.js", tone: "primary" },
-  { label: "React", tone: "primary" },
-  { label: "TypeScript", tone: "primary" },
-  { label: "NestJS", tone: "primary" },
-  { label: "Node.js", tone: "secondary" },
-  { label: "Express", tone: "secondary" },
-  { label: "MongoDB", tone: "secondary" },
-  { label: "PostgreSQL", tone: "secondary" },
-  { label: "MySQL", tone: "secondary" },
-  { label: "REST APIs", tone: "neutral" },
-  { label: "JWT / RBAC", tone: "neutral" },
-  { label: "Tailwind CSS", tone: "neutral" },
-  { label: "Docker", tone: "neutral" },
-  { label: "Postman", tone: "neutral" },
-  { label: "Git", tone: "neutral" },
+const skillBlocks = [
+  {
+    title: "Frontend Architecture",
+    badge: "FRONTEND",
+    stat: "RESPONSIVE",
+    items: ["Next.js", "React.js", "TypeScript", "Tailwind CSS", "HTML5", "CSS3"],
+    description: "Building clean, responsive interfaces with motion, reusable components, and strong user-facing polish.",
+    wide: true,
+  },
+  {
+    title: "Backend Systems",
+    badge: "BACKEND",
+    stat: "JWT / RBAC",
+    items: ["Node.js", "NestJS", "Express.js", "REST APIs", "JWT", "bcrypt"],
+    description: "Designing role-based workflows, secure authentication, and maintainable server-side modules.",
+  },
+  {
+    title: "Databases",
+    badge: "DATABASES",
+    stat: "SQL + NOSQL",
+    items: ["PostgreSQL", "MongoDB", "MySQL", "TypeORM", "Mongoose"],
+    description: "Working with relational and document databases, schema design, and database-driven application flows.",
+  },
+  {
+    title: "Tools & Delivery",
+    badge: "TOOLS",
+    stat: "DOCKER READY",
+    items: ["Git", "GitHub", "Docker", "Postman", "VS Code", "Vercel"],
+    description: "Using practical tooling to develop, test, version, containerize, and deploy production-ready web apps.",
+    wide: true,
+  },
 ];
 
-const stats = [
-  ["3.566", "CGPA at NED University"],
-  ["2027", "Expected graduation"],
-  ["4", "Featured projects"],
-  ["2", "Industry internships"],
+const experienceItems = [
+  {
+    year: "JUN - AUG 2026",
+    title: "Software Engineering Intern",
+    org: "JBS - Karachi, Pakistan",
+    text: "Built InTrack and a lightweight TMS using Next.js, React.js, NestJS, PostgreSQL, TypeORM, and Docker with role-based portals, authentication, notifications, and document workflows.",
+  },
+  {
+    year: "DEC 2025 - FEB 2026",
+    title: "Data Science Intern",
+    org: "10Pearls - Remote",
+    text: "Worked on data processing and analysis tasks in a collaborative enterprise environment while contributing to data-focused workflows and technical documentation.",
+  },
 ];
 
-export default function Home() {
-  const [profileImageReady, setProfileImageReady] = useState(true);
+const educationItems = [
+  {
+    year: "EXPECTED JUN 2027",
+    title: "Bachelor of Computer Science",
+    org: "NED University of Engineering & Technology",
+    text: "Final year Computer Science undergraduate with a CGPA of 3.566/4.00, focused on full-stack engineering, backend systems, databases, and practical software delivery.",
+  },
+];
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="mb-7 flex items-center gap-4"
+    >
+      <span className="font-mono text-[11px] uppercase tracking-[0.35em] text-[#d4af37]">
+        {children}
+      </span>
+      <span className="h-px w-20 bg-gradient-to-r from-[#d4af37] via-[#8c6d4f]/60 to-transparent" />
+    </motion.div>
+  );
+}
+
+function FilmTitle({ top, bottom }: { top: string; bottom?: string }) {
+  return (
+    <h2 className="select-none font-display text-5xl uppercase leading-[0.84] tracking-wide sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+      <span className="block bg-gradient-to-b from-white via-[#d5cbc0] to-[#605448] bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+        {top}
+      </span>
+      {bottom ? (
+        <span className="block bg-gradient-to-b from-[#f7e7c4] via-[#c99e5d] to-[#543b1a] bg-clip-text text-transparent drop-shadow-[0_8px_25px_rgba(201,158,93,0.35)]">
+          {bottom}
+        </span>
+      ) : null}
+    </h2>
+  );
+}
+function PortraitCard() {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [11, -11]), { damping: 18, stiffness: 220 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-11, 11]), { damping: 18, stiffness: 220 });
 
   return (
-    <main className="min-h-screen overflow-x-hidden">
-      <section className="relative min-h-screen overflow-hidden">
-        <div className="fixed inset-0 z-0">
-          <HeroScene />
-        </div>
-        <div className="cyber-grid pointer-events-none fixed inset-0 z-[1]" />
-        <div className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_at_50%_36%,rgba(10,10,15,0.76)_0%,rgba(10,10,15,0.46)_24%,rgba(10,10,15,0.18)_44%,#0a0a0f_94%)]" />
-
-        <nav className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5 md:px-8">
-          <a className="font-display text-xs font-bold uppercase tracking-[0.28em] text-cyan-200" href="#">
-            Abdul Rehman
-          </a>
-          <div className="hidden items-center gap-7 font-display text-[10px] uppercase tracking-[0.26em] text-[#8888cc] md:flex">
-            <a className="transition hover:text-cyan-200" href="#about">About</a>
-            <a className="transition hover:text-cyan-200" href="#projects">Work</a>
-            <a className="transition hover:text-cyan-200" href="#contact">Contact</a>
-          </div>
-        </nav>
-
-        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-76px)] w-full max-w-6xl flex-col items-center justify-center px-5 pb-24 pt-8 text-center md:px-8">
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="font-display text-[11px] uppercase tracking-[0.36em] text-[#00f5ff] drop-shadow-[0_0_18px_rgba(0,245,255,0.6)]"
-          >
-            Software Engineer | Full-Stack Developer
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 26 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08, duration: 0.8 }}
-            className="mt-6 max-w-5xl font-display text-[clamp(42px,8vw,92px)] font-black uppercase leading-[0.95] text-[#e9e7ff] drop-shadow-[0_10px_34px_rgba(0,0,0,0.95)]"
-          >
+    <div className="relative flex justify-center [perspective:1400px]">
+      <motion.div
+        animate={{ scale: hovered ? 1.08 : 1, opacity: hovered ? 0.35 : 0.16 }}
+        className="absolute -inset-5 rounded-3xl bg-[conic-gradient(from_0deg,#d4af37,#8c6d4f,transparent,#d4af37)] blur-2xl"
+      />
+      <motion.div
+        ref={cardRef}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        onMouseMove={(event) => {
+          if (!cardRef.current) return;
+          const rect = cardRef.current.getBoundingClientRect();
+          mouseX.set((event.clientX - rect.left) / rect.width - 0.5);
+          mouseY.set((event.clientY - rect.top) / rect.height - 0.5);
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => {
+          setHovered(false);
+          mouseX.set(0);
+          mouseY.set(0);
+        }}
+        initial={{ opacity: 0, scale: 0.92, y: 28 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
+        className="group relative border border-[#8c6d4f]/45 bg-[#120f0c]/80 p-3 shadow-[0_25px_70px_rgba(0,0,0,0.95)] backdrop-blur-xl transition hover:border-[#d4af37]/80"
+      >
+        <span className="absolute left-0 top-0 h-6 w-6 border-l-2 border-t-2 border-[#d4af37]" />
+        <span className="absolute right-0 top-0 h-6 w-6 border-r-2 border-t-2 border-[#d4af37]" />
+        <span className="absolute bottom-0 left-0 h-6 w-6 border-b-2 border-l-2 border-[#d4af37]" />
+        <span className="absolute bottom-0 right-0 h-6 w-6 border-b-2 border-r-2 border-[#d4af37]" />
+        <div className="relative overflow-hidden bg-black">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/profile.png" alt="Abdul Rehman" className="max-h-[560px] w-full object-contain brightness-95 contrast-105 transition duration-700 group-hover:brightness-110" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          <span className="absolute bottom-4 right-4 font-display text-3xl uppercase text-[#f2d8a7] drop-shadow-[0_0_12px_rgba(242,216,167,0.5)]">
             Abdul
-            <span className="block text-[#00f5ff] drop-shadow-[0_0_30px_rgba(0,245,255,0.45)]">
-              Rehman
-            </span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.16, duration: 0.8 }}
-            className="mt-6 max-w-2xl text-base font-light leading-8 tracking-[0.08em] text-[#aaa9e8] drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)] md:text-lg"
-          >
-            Computer Science undergraduate at NED University building full-stack applications, REST APIs, role-based systems, and production-ready web experiences.
-          </motion.p>
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.24, duration: 0.75 }}
-            className="mt-12 flex flex-wrap items-center justify-center gap-3"
-          >
-            <a
-              className="sharp-button inline-flex h-12 items-center gap-2 bg-[#00f5ff] px-7 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-[#0a0a0f] transition hover:bg-cyan-200"
-              href="#projects"
-            >
-              View Work
-              <ArrowDown size={16} />
-            </a>
-            <a
-              className="sharp-button inline-flex h-12 items-center gap-2 border border-[#00f5ff] bg-transparent px-7 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-[#00f5ff] transition hover:bg-cyan-300/10"
-              href="#contact"
-            >
-              Get In Touch
-              <Mail size={16} />
-            </a>
-          </motion.div>
+export default function Home() {
 
-          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-            <span className="font-display text-[9px] uppercase tracking-[0.32em] text-[#5555aa]">
-              Scroll
-            </span>
-            <span className="h-10 w-px bg-gradient-to-b from-[#00f5ff] to-transparent" />
+  return (
+    <main className="min-h-screen overflow-x-hidden bg-black text-[#e8dfd8] selection:bg-[#cbb59d] selection:text-black">
+
+      <section className="relative min-h-screen overflow-hidden bg-black">
+        <div className="fixed inset-0 z-0 flex items-center justify-end overflow-hidden bg-black">
+          <video autoPlay muted loop playsInline className="h-screen w-auto max-w-none object-contain opacity-80">
+            <source src="/videos/hero.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black via-black/90 to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_50%,transparent,rgba(0,0,0,0.62)_54%,#000_94%)]" />
+        </div>
+
+        <div className="relative z-10 flex min-h-screen flex-col justify-between px-6 py-6 sm:px-12 lg:px-16">
+          <header className="flex items-center justify-between">
+            <a href="#" className="font-mono text-xs font-semibold uppercase tracking-[0.35em] text-[#ead8c7] transition hover:text-[#d4af37] sm:text-sm">
+            Portfolio
+            </a>
+            <nav className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.28em] text-[#c4b5a5] md:flex">
+              <a href="#about" className="hover:text-white">About</a>
+              <a href="#work" className="hover:text-white">Projects</a>
+              <a href="#skills" className="hover:text-white">Skills</a>
+              <a href="#experience" className="hover:text-white">Experience</a>
+              <a href="#contact" className="hover:text-white">Contact</a>
+            </nav>
+            <a href="#contact" className="border border-[#8c6d4f]/60 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.24em] text-[#ead8c7] transition hover:border-[#d4af37]">
+              Let&apos;s Talk
+            </a>
+          </header>
+
+          <div className="my-auto max-w-3xl py-16">
+            <motion.div initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.16 } } }}>
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 22, filter: "blur(8px)" }, visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1.05, ease: [0.16, 1, 0.3, 1] } } }} className="font-display text-[clamp(4.2rem,12vw,10rem)] uppercase leading-[0.82] tracking-wide">
+                <span className="block bg-gradient-to-b from-white via-[#d5cbc0] to-[#605448] bg-clip-text text-transparent">Abdul</span>
+                <span className="block bg-gradient-to-b from-[#f7e7c4] via-[#c99e5d] to-[#543b1a] bg-clip-text text-transparent">Rehman</span>
+              </motion.h1>
+              <motion.p variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0, transition: { duration: 0.9 } } }} className="mt-5 max-w-xl font-mono text-[11px] uppercase leading-7 tracking-[0.28em] text-[#c4b29e]">
+                Software Engineer • Full-Stack Developer
+              </motion.p>
+              <motion.p variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0, transition: { duration: 0.9 } } }} className="mt-5 max-w-xl text-sm font-light leading-8 tracking-wide text-[#a8988b]">
+                Final year Computer Science undergraduate at NED University building full-stack applications, REST APIs, role-based workflows, and production-ready web experiences.
+              </motion.p>
+              <motion.div variants={{ hidden: { opacity: 0, y: 18 }, visible: { opacity: 1, y: 0, transition: { duration: 0.9 } } }} className="mt-8 flex flex-wrap gap-4">
+                <a href="#work" className="border border-[#8c6d4f] bg-[#120f0c]/80 px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.24em] text-[#ead8c7] shadow-[0_0_25px_rgba(212,175,55,0.18)] transition hover:border-[#d4af37] hover:text-white">
+                  Explore Work ↗
+                </a>
+                <a href="/resume.pdf" target="_blank" rel="noreferrer" className="border border-[#8c6d4f]/40 px-7 py-3.5 font-mono text-[11px] uppercase tracking-[0.24em] text-[#bfa895] transition hover:border-[#d4af37] hover:text-[#ead8c7]">
+                  Download Resume ↓
+                </a>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <div className="relative z-10 bg-[#0a0a0f]">
-        <section id="about" className="mx-auto grid w-full max-w-6xl gap-10 overflow-hidden border-t border-[#1a1a2e] px-5 py-20 md:grid-cols-[1fr_0.85fr] md:px-8">
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.65 }}>
-            <p className="font-display text-[10px] uppercase tracking-[0.4em] text-[#7b2fff]">00 - About</p>
-            <h2 className="mt-4 font-display text-2xl font-bold uppercase text-[#e0e0ff]">Who I am</h2>
-            <div className="mt-7 space-y-5 text-[15px] leading-8 text-[#8888cc]">
-              <p>
-                I am a final year Computer Science undergraduate at NED University of Engineering and Technology with hands-on experience building full-stack applications using Next.js, React.js, NestJS, Node.js, PostgreSQL, and MongoDB.
-              </p>
-              <p>
-                Through internships at JBS and 10Pearls, I have worked on RESTful API development, authentication, role-based access control, database design, Dockerized applications, and practical data workflows.
-              </p>
-            </div>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <a
-                className="sharp-button inline-flex h-11 items-center gap-2 border border-[#00f5ff] px-5 font-display text-[10px] uppercase tracking-[0.16em] text-cyan-200 transition hover:bg-cyan-300/10"
-                href="/resume.pdf"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Download size={15} />
-                Download Resume
-              </a>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.65 }} className="grid gap-4">
-            {profileImageReady ? (
-              <div className="border border-[#2a2a4e] bg-[#1a1a2e] p-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/profile.png"
-                  alt="Abdul Rehman portrait"
-                  className="max-h-[520px] w-full object-contain"
-                  onError={() => setProfileImageReady(false)}
-                />
-              </div>
-            ) : (
-              <div className="border border-[#2a2a4e] bg-[#1a1a2e] p-6">
-                <p className="font-display text-[10px] uppercase tracking-[0.24em] text-[#00f5ff]">
-                  Portrait Slot
-                </p>
-                <p className="mt-3 text-[13px] leading-6 text-[#8888cc]">
-                  Add your photo as public/profile.png and it will appear here for every visitor.
-                </p>
-              </div>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map(([value, label]) => (
-                <div key={label} className="border border-[#2a2a4e] bg-[#1a1a2e] p-5">
-                  <div className="font-display text-3xl font-black text-[#00f5ff]">{value}</div>
-                  <div className="mt-2 text-xs leading-5 tracking-[0.05em] text-[#5555aa]">{label}</div>
+      <section id="about" className="relative overflow-hidden bg-black px-6 py-24 sm:px-12 lg:px-20 lg:py-32">
+        <div className="absolute left-1/6 top-1/4 h-[32rem] w-[32rem] rounded-full bg-[#d4af37]/10 blur-[160px]" />
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <SectionLabel>01 / About</SectionLabel>
+            <FilmTitle top="Who I am?" bottom="Full-stack developer" />
+            <p className="mt-8 max-w-2xl text-sm font-light leading-8 tracking-wide text-[#b3a497]">
+              I&apos;m <span className="font-medium text-[#f3dbb3]">Abdul Rehman</span>, a final year Computer Science undergraduate at NED University with hands-on experience building full-stack applications using Next.js, React.js, NestJS, Node.js, PostgreSQL, and MongoDB.
+            </p>
+            <p className="mt-5 max-w-2xl text-sm font-light leading-8 tracking-wide text-[#b3a497]">
+              Through internships at JBS and 10Pearls, I have worked on REST API development, authentication, role-based access control, database design, Dockerized applications, and practical data workflows.
+            </p>
+            <div className="mt-10 grid grid-cols-2 gap-6 border-t border-[#8c6d4f]/25 pt-6 sm:grid-cols-4">
+              {[["3.566", "CGPA"], ["2027", "Graduation"], ["4", "Featured Projects"], ["2", "Internships"]].map(([value, label]) => (
+                <div key={label}>
+                  <div className="font-display text-4xl uppercase text-[#f4ebe2]">{value}</div>
+                  <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-[#a8988b]">{label}</div>
                 </div>
               ))}
             </div>
-          </motion.div>
-        </section>
-
-        <section id="experience" className="mx-auto w-full max-w-6xl border-t border-[#1a1a2e] px-5 py-20 md:px-8">
-          <p className="font-display text-[10px] uppercase tracking-[0.4em] text-[#7b2fff]">01 - Experience</p>
-          <h2 className="mt-4 font-display text-2xl font-bold uppercase text-[#e0e0ff]">Industry exposure</h2>
-          <div className="mt-9 grid gap-4 md:grid-cols-2">
-            {[
-              {
-                role: "Software Engineering Intern - JBS",
-                date: "Jun 2026 - Aug 2026",
-                detail:
-                  "Built InTrack and a lightweight TMS using Next.js, React.js, NestJS, PostgreSQL, TypeORM, and Docker. Developed role-based portals, authentication, notifications, document handling, Cloudinary, and Nodemailer integrations.",
-              },
-              {
-                role: "Data Science Intern - 10Pearls",
-                date: "Dec 2025 - Feb 2026",
-                detail:
-                  "Worked on data processing and analysis tasks in a collaborative enterprise environment, contributing to data-focused workflows, Agile collaboration, and technical documentation.",
-              },
-            ].map((item, index) => (
-              <motion.article
-                key={item.role}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08, duration: 0.58 }}
-                className="border border-[#2a2a4e] bg-[#1a1a2e] p-6 transition hover:border-[#00f5ff]"
-              >
-                <p className="font-display text-[9px] uppercase tracking-[0.22em] text-[#7b2fff]">{item.date}</p>
-                <h3 className="mt-4 text-base font-medium text-[#e0e0ff]">{item.role}</h3>
-                <p className="mt-3 text-[13px] leading-6 text-[#8888cc]">{item.detail}</p>
-              </motion.article>
-            ))}
           </div>
-        </section>
+          <div className="lg:col-span-5"><PortraitCard /></div>
+        </div>
+      </section>
 
-        <section id="projects" className="mx-auto w-full max-w-6xl border-t border-[#1a1a2e] px-5 py-20 md:px-8">
-          <p className="font-display text-[10px] uppercase tracking-[0.4em] text-[#7b2fff]">02 - Projects</p>
-          <h2 className="mt-4 font-display text-2xl font-bold uppercase text-[#e0e0ff]">Selected work</h2>
-          <div className="mt-9 grid gap-4 md:grid-cols-3">
+      <section id="work" className="relative bg-black px-6 py-24 sm:px-12 lg:px-20">
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <SectionLabel>02 / Projects</SectionLabel>
+          <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <FilmTitle top="Projects" bottom="" />
+            <p className="max-w-sm text-sm font-light leading-7 text-[#a8988b]">A focused selection of full-stack, backend, and MERN projects built through internships and independent work.</p>
+          </div>
+          <div className="space-y-8">
             {projects.map((project, index) => (
-              <motion.a
-                key={project.name}
-                href={"href" in project ? project.href : "#"}
-                target={"href" in project ? "_blank" : undefined}
-                rel={"href" in project ? "noreferrer" : undefined}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08, duration: 0.58 }}
-                className="group block border border-[#2a2a4e] bg-[#1a1a2e] p-6 transition hover:-translate-y-1 hover:border-[#00f5ff]"
-              >
-                <p className="font-display text-[9px] uppercase tracking-[0.22em] text-[#7b2fff]">{project.tag}</p>
-                <h3 className="mt-4 text-base font-medium text-[#e0e0ff]">{project.name}</h3>
-                <p className="mt-3 min-h-20 text-[13px] leading-6 text-[#8888cc]">{project.description}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {project.tech.map((tech) => (
-                    <span key={tech} className="border border-[#2a2a4e] px-2 py-1 text-[10px] text-[#8888cc] group-hover:border-cyan-300/30">
-                      {tech}
-                    </span>
-                  ))}
+              <motion.a key={project.title} href={project.href || "#"} target={project.href ? "_blank" : undefined} rel={project.href ? "noreferrer" : undefined} initial={{ opacity: 0, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ delay: index * 0.08, duration: 0.75 }} className="group sticky top-10 block rounded-2xl border border-[#8c6d4f]/50 bg-[#0e0c0a] p-8 shadow-[0_25px_70px_rgba(0,0,0,0.98)] transition hover:border-[#d4af37] sm:p-10" style={{ zIndex: index + 1 }}>
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/80 to-transparent" />
+                <span className="absolute -bottom-6 -right-2 font-display text-9xl text-[#ead8c7]/5">{project.number}</span>
+                <div className="relative z-10 grid gap-8 lg:grid-cols-12">
+                  <div className="lg:col-span-7">
+                    <div className="mb-4 flex items-center gap-3"><span className="font-mono text-xs font-bold text-[#d4af37]">{project.number} {"//"}</span><span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#a8988b]">{project.category}</span></div>
+                    <h3 className="font-display text-5xl uppercase leading-[0.9] text-white transition group-hover:text-[#f7e7c4] sm:text-6xl">{project.title}</h3>
+                    <p className="mt-5 max-w-2xl text-sm font-light leading-8 tracking-wide text-[#bdb0a4]">{project.description}</p>
+                    <div className="mt-8 flex flex-wrap gap-2 border-t border-[#8c6d4f]/25 pt-6">{project.tech.map((tech) => <span key={tech} className="border border-[#8c6d4f]/40 bg-[#16120e] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[#e8d7c5]">{tech}</span>)}</div>
+                  </div>
+                  <div className="space-y-3 lg:col-span-5 lg:border-l lg:border-[#8c6d4f]/25 lg:pl-7">
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.25em] text-[#8c6d4f]">{"// Architecture Metrics"}</span>
+                    {project.metrics.map(([label, value]) => <div key={label} className="flex items-center justify-between border border-[#8c6d4f]/25 bg-[#050403] p-3.5"><span className="font-mono text-[10px] text-[#a8988b]">{label}</span><span className="font-mono text-[11px] font-medium text-[#f7e7c4]">{value}</span></div>)}
+                  </div>
                 </div>
               </motion.a>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="stack" className="mx-auto w-full max-w-6xl border-t border-[#1a1a2e] px-5 py-20 md:px-8">
-          <p className="font-display text-[10px] uppercase tracking-[0.4em] text-[#7b2fff]">03 - Stack</p>
-          <h2 className="mt-4 font-display text-2xl font-bold uppercase text-[#e0e0ff]">Technologies</h2>
-          <div className="mt-9 flex flex-wrap gap-3">
-            {skills.map((skill) => (
-              <motion.span
-                key={skill.label}
-                whileHover={{ y: -3 }}
-                className={`border px-4 py-2 font-display text-[10px] uppercase tracking-[0.13em] ${
-                  skill.tone === "primary"
-                    ? "border-cyan-300/40 text-[#00f5ff]"
-                    : skill.tone === "secondary"
-                      ? "border-violet-400/40 text-violet-300"
-                      : "border-[#2a2a4e] text-[#8888cc]"
-                }`}
-              >
-                {skill.label}
-              </motion.span>
-            ))}
+      <section id="skills" className="relative bg-black px-6 py-24 sm:px-12 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionLabel>03 / Skills</SectionLabel>
+          <FilmTitle top="Technologies" bottom="Stack I use" />
+          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-12">
+            {skillBlocks.map((block) => <motion.article key={block.title} whileHover={{ y: -5 }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`${block.wide ? "lg:col-span-7" : "lg:col-span-5"} group border border-[#8c6d4f]/35 bg-[#100d0b]/85 p-8 transition hover:border-[#d4af37]/80 hover:shadow-[0_16px_45px_rgba(212,175,55,0.14)]`}>
+              <div className="mb-4 flex items-center justify-between"><span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#d4af37]">{block.badge}</span><span className="border border-[#8c6d4f]/40 bg-[#17130f] px-2.5 py-0.5 font-mono text-[10px] text-[#c4b5a5]">{block.stat}</span></div>
+              <h3 className="font-display text-4xl uppercase tracking-wide text-white group-hover:text-[#f7e7c4]">{block.title}</h3>
+              <p className="mt-3 max-w-xl text-sm font-light leading-7 text-[#a8988b]">{block.description}</p>
+              <div className="mt-7 flex flex-wrap gap-2 border-t border-[#8c6d4f]/20 pt-4">{block.items.map((item) => <span key={item} className="border border-[#8c6d4f]/35 bg-[#171310] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-[#e8d7c5]">{item}</span>)}</div>
+            </motion.article>)}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="contact" className="mx-auto w-full max-w-6xl border-t border-[#1a1a2e] px-5 py-20 md:px-8">
-          <p className="font-display text-[10px] uppercase tracking-[0.4em] text-[#7b2fff]">04 - Contact</p>
-          <h2 className="mt-4 font-display text-2xl font-bold uppercase text-[#e0e0ff]">Let&apos;s build something</h2>
-          <p className="mt-6 max-w-2xl text-[15px] leading-8 text-[#8888cc]">
-            Open to software engineering internships, junior developer roles, backend/full-stack projects, and collaborations around useful web products.
-          </p>
-          <a className="mt-8 block font-display text-xl font-bold text-[#00f5ff] transition hover:opacity-75" href="mailto:ar3450630@gmail.com">
-            ar3450630@gmail.com
-          </a>
-          <div className="mt-8 flex flex-wrap gap-5">
-            <a className="inline-flex items-center gap-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#5555aa] transition hover:text-[#00f5ff]" href="tel:+923121191058">
-              <Phone size={16} /> 0312-1191058
-            </a>
-            <a className="inline-flex items-center gap-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#5555aa] transition hover:text-[#00f5ff]" href="https://github.com/AbdulRehman-gitrep" target="_blank" rel="noreferrer">
-              <Github size={16} /> GitHub
-            </a>
-            <a className="inline-flex items-center gap-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#5555aa] transition hover:text-[#00f5ff]" href="https://www.linkedin.com/in/abdul-rehman-21a7752a7" target="_blank" rel="noreferrer">
-              <Linkedin size={16} /> LinkedIn
-            </a>
-            <a className="inline-flex items-center gap-2 font-display text-[10px] uppercase tracking-[0.2em] text-[#5555aa] transition hover:text-[#00f5ff]" href="/resume.pdf" target="_blank" rel="noreferrer">
-              <Download size={16} /> Resume
-            </a>
+      <section id="experience" className="relative bg-black px-6 py-24 sm:px-12 lg:px-20">
+        <div className="mx-auto max-w-5xl">
+          <SectionLabel>04 / Experience and Education</SectionLabel>
+          <FilmTitle top="Experience and" bottom="Education" />
+          <div className="mt-16 grid gap-8 lg:grid-cols-2">
+            <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.75 }} className="relative border border-[#8c6d4f]/40 bg-[#0e0c0a] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.9)]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
+              <h3 className="font-display text-5xl uppercase text-white">Experience</h3>
+              <div className="relative mt-8 space-y-8 pl-8"><div className="absolute bottom-3 left-[5px] top-2 w-px bg-gradient-to-b from-[#d4af37] via-[#8c6d4f]/45 to-transparent" />
+                {experienceItems.map((item, index) => (
+                  <motion.article key={item.title} initial={{ opacity: 0, x: -14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.65 }} className="group relative"><span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border border-[#d4af37] bg-[#0e0c0a] shadow-[0_0_14px_rgba(212,175,55,0.55)] transition group-hover:bg-[#d4af37]" />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">{item.year}</span>
+                    <h4 className="mt-2 font-display text-3xl uppercase leading-none text-white group-hover:text-[#f7e7c4]">{item.title}</h4>
+                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#8c6d4f]">{item.org}</span>
+                    <p className="mt-3 text-sm font-light leading-7 text-[#a8988b]">{item.text}</p>
+                  </motion.article>
+                ))}
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.12, duration: 0.75 }} className="relative border border-[#8c6d4f]/40 bg-[#0e0c0a] p-7 shadow-[0_20px_55px_rgba(0,0,0,0.9)]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
+              <h3 className="font-display text-5xl uppercase text-white">Education</h3>
+              <div className="relative mt-8 space-y-8 pl-8"><div className="absolute bottom-3 left-[5px] top-2 w-px bg-gradient-to-b from-[#d4af37] via-[#8c6d4f]/45 to-transparent" />
+                {educationItems.map((item, index) => (
+                  <motion.article key={item.title} initial={{ opacity: 0, x: -14 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.65 }} className="group relative"><span className="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border border-[#d4af37] bg-[#0e0c0a] shadow-[0_0_14px_rgba(212,175,55,0.55)] transition group-hover:bg-[#d4af37]" />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">{item.year}</span>
+                    <h4 className="mt-2 font-display text-3xl uppercase leading-none text-white group-hover:text-[#f7e7c4]">{item.title}</h4>
+                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#8c6d4f]">{item.org}</span>
+                    <p className="mt-3 text-sm font-light leading-7 text-[#a8988b]">{item.text}</p>
+                  </motion.article>
+                ))}
+              </div>
+            </motion.div>
           </div>
-        </section>
-
-        <footer className="border-t border-[#1a1a2e] px-5 py-8 text-center font-display text-[9px] uppercase tracking-[0.32em] text-[#2a2a4e]">
-          [ Abdul Rehman - Software Engineer - Karachi, Pakistan ]
-        </footer>
-      </div>
+        </div>
+      </section>
+      <footer id="contact" className="relative bg-black px-6 py-20 sm:px-12 lg:px-20">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5"><SectionLabel>05 / Contact</SectionLabel><FilmTitle top="Let&apos;s build" bottom="something" /><p className="mt-7 max-w-md text-sm font-light leading-7 text-[#a8988b]">Open to software engineering internships, junior developer roles, backend/full-stack projects, and useful web product collaborations.</p></div>
+          <div className="relative border border-[#8c6d4f]/40 bg-[#0a0806] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.9)] lg:col-span-7">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent" />
+            <a href="mailto:ar3450630@gmail.com" className="block break-words font-mono text-2xl lowercase text-[#f7e7c4] transition hover:text-[#d4af37] sm:text-3xl">ar3450630@gmail.com</a>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="tel:+923121191058"><Phone className="mb-3" size={18} />0312-1191058</a>
+              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="https://github.com/AbdulRehman-gitrep" target="_blank" rel="noreferrer"><Github className="mb-3" size={18} />GitHub</a>
+              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="https://www.linkedin.com/in/abdul-rehman-21a7752a7" target="_blank" rel="noreferrer"><Linkedin className="mb-3" size={18} />LinkedIn</a>
+              <a className="border border-[#8c6d4f]/35 bg-[#120f0c] p-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[#ead8c7] hover:border-[#d4af37]" href="/resume.pdf" target="_blank" rel="noreferrer"><Download className="mb-3" size={18} />Resume</a>
+            </div>
+          </div>
+        </div>
+        <div className="mx-auto mt-16 flex max-w-7xl flex-col justify-between gap-4 border-t border-[#8c6d4f]/15 pt-8 text-center font-mono text-[10px] uppercase tracking-widest text-[#8c6d4f] sm:flex-row sm:text-left"><span>Portfolio // Abdul Rehman</span><span>© 2026 • Engineered by Abdul Rehman</span></div>
+      </footer>
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
